@@ -1,10 +1,12 @@
 import express, { NextFunction, Request, Response } from "express"
+import cors from "cors"
 import { RouteNotFoundError } from "./4-models/errors-model";
 import catchAll from "./3-middlewares/catch-all";
 
 const server = express();
 
-// Todo - add cors
+//  Backend approval to browse AJAX to backend API
+if (process.env.NODE_ENV === "development") server.use(cors());
 
 // Tell express to extract json object from request body into request.body variable:
 server.use(express.json());
