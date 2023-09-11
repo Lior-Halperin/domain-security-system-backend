@@ -1,5 +1,6 @@
 import express, { NextFunction, Request, Response } from "express"
 import { RouteNotFoundError } from "./4-models/errors-model";
+import catchAll from "./3-middlewares/catch-all";
 
 const server = express();
 
@@ -20,7 +21,7 @@ server.use("*", (request: Request, response: Response, next: NextFunction) => {
     next(err);
 });
 
-// Todo - add cathAll
+server.use(catchAll);
 
 server.listen(3001, ()=>{
     try{
