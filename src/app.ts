@@ -1,7 +1,8 @@
-import express, { NextFunction, Request, Response } from "express"
-import cors from "cors"
+import express, { NextFunction, Request, Response } from "express";
+import cors from "cors";
 import { RouteNotFoundError } from "./4-models/errors-model";
 import catchAll from "./3-middlewares/catch-all";
+import config from "./2-utils/config";
 
 const server = express();
 
@@ -12,27 +13,25 @@ if (process.env.NODE_ENV === "development") server.use(cors());
 server.use(express.json());
 
 // Todo - add endpoint
-    // domain
-    // add-domain
+// domain
+// add-domain
 
 // Route not found
 server.use("*", (request: Request, response: Response, next: NextFunction) => {
-    console.log("---Route not found---")
+  console.log("---Route not found---");
 
-    const err = new RouteNotFoundError(request.method, request.originalUrl);
-    next(err);
+  const err = new RouteNotFoundError(request.method, request.originalUrl);
+  next(err);
 });
 
 server.use(catchAll);
 
-server.listen(3001, ()=>{
+server.listen(config.serverPort, () => {
     try{
-        console.log(`Listening on http://localhost:3001`);
+        console.log(`Listening on http://localhost:${config.serverPort}`);
     }
     catch(err:any){
-        console.log('Error connecting to database:', err);
+        console.log('Error connecting to database:', err);          
     }
-})
 
-
-
+});
