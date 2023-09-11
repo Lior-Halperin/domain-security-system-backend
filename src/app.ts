@@ -1,4 +1,5 @@
-import express from "express"
+import express, { NextFunction, Request, Response } from "express"
+import { RouteNotFoundError } from "./4-models/errors-model";
 
 const server = express();
 
@@ -11,7 +12,13 @@ server.use(express.json());
     // domain
     // add-domain
 
-// Todo - Rout not found
+// Route not found
+server.use("*", (request: Request, response: Response, next: NextFunction) => {
+    console.log("---Route not found---")
+
+    const err = new RouteNotFoundError(request.method, request.originalUrl);
+    next(err);
+});
 
 // Todo - add cathAll
 
