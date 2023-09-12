@@ -1,5 +1,6 @@
+import dal from "../2-utils/db-dal";
 
-async function getDomainInfoByName(name: string): Promise<void> { // Todo: Promise<domainInfoResponse>
+async function getDomainInfoByName(domainName: string): Promise<void> { // Todo: Promise<domainInfoResponse>
   try {
 
     // Todo: Validate domain name using JOI:
@@ -9,18 +10,16 @@ async function getDomainInfoByName(name: string): Promise<void> { // Todo: Promi
         // throw new ValidationError(errors)
     // }
 
-    // Todo: Writing an sql query:
-    // const sql = SELECT ....
+    // sql query:
+    const sql = `SELECT * FROM domain WHERE domain_name = ?`;
 
-    // Todo: Send query do DB:
-    // const domainInfoResponse: domainInfoResponseModel = await dalDB.execute(sql,[id]); // return string || domainModel
+    // Send query do DB
+    const domain = await dal.execute(sql,[domainName]);
 
-    // Todo: handel domainInfoResponse
-    // if (typeof domainInfoResponse === 'string'){
-    //          add  a domain to a list for analysis.
-    // }
-
+    // Todo: if (!domain) addDomainToAnalysis(domainName)
+    
     // return domainInfoResponse
+    return domain
 
   } catch (err: any) {}
 }
