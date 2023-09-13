@@ -1,4 +1,5 @@
 import dal from "../2-utils/db-dal";
+import { ResourceNotFoundError } from "../4-models/errors-model";
 
 async function getDomainInfoByName(domainName: string): Promise<void> { // Todo: Promise<domainInfoResponse>
   try {
@@ -17,6 +18,9 @@ async function getDomainInfoByName(domainName: string): Promise<void> { // Todo:
     const domain = await dal.execute(sql,[domainName]);
 
     // Todo: if (!domain) addDomainToAnalysis(domainName)
+    if (!domain) {
+        throw new ResourceNotFoundError(domainName);
+    }    
     
     // return domainInfoResponse
     return domain

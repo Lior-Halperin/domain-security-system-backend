@@ -11,8 +11,8 @@ class ClientError{
 
 // Frontend requesting resource with id we don't have:
 export class ResourceNotFoundError extends ClientError {
-    public constructor (id: number){
-        super(404, `id ${id} not found`) // The super keyword is used to call the constructor of its parent class to access the parent's properties.
+    public constructor (domainName: string){
+        super(404, `The domain ${domainName} not found, check back later`) // The super keyword is used to call the constructor of its parent class to access the parent's properties.
     }
 }
 
