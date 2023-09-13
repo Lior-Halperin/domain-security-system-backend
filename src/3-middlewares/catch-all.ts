@@ -7,7 +7,6 @@ const filePath = "./src/1-assets/err.txt"
 async function catchAll(err: any, request: Request, response: Response, next: NextFunction) {
     
     console.log(err)
-    logStackTrace(err)
 
     const status = err.status || 500;
     const message = err.message || "Unknown Error";
@@ -26,24 +25,8 @@ async function catchAll(err: any, request: Request, response: Response, next: Ne
     }
 
     
-
     response.status(status).send(message);
 
 }
 
 export default catchAll;
-
-function logStackTrace(error: Error): void {
-    console.error('=== STACK TRACE ===');
-    console.error(error.stack);
-  
-    const stackTrace = error.stack || '';
-    const callsites = stackTrace
-      .split('\n')
-      .slice(1)
-      .map((line) => line.trim().split('at ')[1])
-      .filter((line) => line !== undefined);
-  
-    console.error('=== FUNCTION FLOW ===');
-    console.error(callsites.reverse().join('\n'));
-  }

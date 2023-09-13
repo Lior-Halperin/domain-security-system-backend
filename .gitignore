@@ -3,3 +3,4 @@
 *.env
 *mock-vitustotal-api.json
 *mock-whois-api.json
+*err.txt
