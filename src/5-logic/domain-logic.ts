@@ -17,14 +17,14 @@ async function getDomainInfoByName(domainName: string): Promise<any> { // Todo: 
   }
 
   // sql query:
-  const sql = `SELECT * FROM domain WHERE domain_name = ?`;
+  const sql = `SELECT * FROM domains WHERE domainName = ?`;
 
   // Send query do DB
   const domain = await dal.execute(sql, [domainName]);
 
   if (!domain) {
     // sql query:
-    const sql = `INSERT INTO domain(domain_name) VALUES(?)`;
+    const sql = `INSERT INTO domains(domainName) VALUES(?)`;
 
     // Send query do DB - add domain
     await dal.execute(sql, [domainName]);
@@ -36,7 +36,9 @@ async function getDomainInfoByName(domainName: string): Promise<any> { // Todo: 
 }
 
 async function addNewDomain(domainName: string): Promise<any>{ // Todo: promise type
-  // Todo: Validate domain name using ragex:
+ 
+    
+    // Todo: Validate domain name using ragex:
   const regex = /^.{2,20}$/; // least two characters and up to 20 characters
   const errors = regex.test(domainName);
 
@@ -46,18 +48,18 @@ async function addNewDomain(domainName: string): Promise<any>{ // Todo: promise 
 
   // Checking if the domain exists in a database:
   // sql query:
-  const sqlDomainChecking = `SELECT * FROM domain WHERE domain_name = ?`;
+  const sqlDomainChecking = `SELECT * FROM domains WHERE domainName = ?`;
 
   // Send query do DB
-  const domain = await dal.execute(sqlDomainChecking, [domainName]);
+  const result = await dal.execute(sqlDomainChecking, [domainName]);
 
   // if the domain exists in the DB:
-  if (domain[0]) {
+  if (result[0]) {
     throw new AddingExistingParameterError(domainName);
   }
 
   // sql query:
-  const sql = `INSERT INTO domain(domain_name) VALUES(?)`;
+  const sql = `INSERT INTO domains(domainName,activityStatus) VALUES(?,?)`;
 
   // Send query do DB - add domain
   await dal.execute(sql, [domainName]);
