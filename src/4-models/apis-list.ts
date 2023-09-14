@@ -1,4 +1,4 @@
 export enum ApisList {
-  whoisApi = "whois",
-  virusTotalApi = "virusTotal",
+  whois = "WHOIS",
+  virusTotal = "VIRUS",
 }
