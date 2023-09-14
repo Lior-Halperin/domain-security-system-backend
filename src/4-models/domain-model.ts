@@ -2,19 +2,26 @@ import { IIdentityInfo } from "./identityInfo-model";
 import { ISecurityInfo } from "./securityInfo-model";
 
 export interface IDomainModel {
+  domainName: string;
   securityInfo: ISecurityInfo;
   identityInfo: IIdentityInfo;
-  activityStatus: boolean;
+  scanDate: string;
+  activityStatus: "new" | "active" | "inactive";
 }
 
 export class DomainModel {
-  public readonly securityInfo: string;
-  public readonly identityInfo: string;
-  public readonly activityStatus: string;
+  public id: number;
+  public domainName: string;
+  public securityInfo: string;
+  public identityInfo: string;
+  public activityStatus: "new" | "active" | "inactive";
+  public scanDate: string;
 
-  public constructor(data: IDomainModel) {
-    this.securityInfo = JSON.stringify(data.securityInfo);
-    this.identityInfo = JSON.stringify(data.identityInfo);
-    this.activityStatus = JSON.stringify(data.activityStatus);
+  public constructor(domain: DomainModel) {
+    this.domainName = domain.domainName;
+    this.securityInfo = JSON.stringify(domain.securityInfo);
+    this.identityInfo = JSON.stringify(domain.identityInfo);
+    this.scanDate = domain.scanDate;
+    this.activityStatus = domain.activityStatus;
   }
 }
