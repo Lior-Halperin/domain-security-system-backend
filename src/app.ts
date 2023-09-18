@@ -6,29 +6,38 @@ import catchAll from "./3-middlewares/catch-all";
 import config from "./2-utils/config";
 import domainController from "./6-controllers/domain-controller";
 import scanDomainsLogic from "./5-logic/scanDomains-logic";
-import dbDal from "./2-utils/db-dal";
-import { DomainModel } from "./4-models/domain-model";
+import ApiRequestModel from "./4-models/apiRequest-model";
+import { ApisList } from "./4-models/apis-list";
 
 const server = express();
 
 async function scanDomains() {
   try {
-    // Get the domains required for scanning by date from the DB
-    const domainsToScan: DomainModel[] =
-      await scanDomainsLogic.getDomainsByLastUpdateDate(); // Todo: Add domainModel[] type
+    for (const apisItem of Object.keys(ApisList)) {
+      const apiRequestModel: ApiRequestModel = new ApiRequestModel(
+        ApisList[`${apisItem}`]
+      );
+      // Get the domains required for scanning by date from the DB
+      const domainsToScan = await scanDomainsLogic.getDomainsByLastUpdateDate(
+        apiRequestModel.apiType
+      );
 
-    console.log(domainsToScan);
-    // Creates an array of domain names:
-    const domainNamesList: string[] = domainsToScan.map(
-      (domain) => domain.domainName
-    );
+      // Creates an array of domain names:
+      const domainNamesList: string[] = domainsToScan.map(
+        (domain) => domain.domainName
+      );
 
-    // Send domains list to scan
-    scanDomainsLogic.processDomainsWithInterval(domainNamesList, 1000); // Todo: domains is variable
+      // Send domains list to scan
+      scanDomainsLogic.processDomainsWithInterval(
+        domainNamesList,
+        apiRequestModel
+      ); // Todo: domains is variable
+    }
   } catch (err: any) {
     throw err;
   }
 }
+
 // This will schedule the function to run at 9 in the morning and 11 at night.
 cron.schedule("0 9,23 * * *", scanDomains);
 
