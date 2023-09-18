@@ -1,4 +1,3 @@
-import { IApiRawData } from "./apiRawData";
 import { IDateStamp } from "./dateStamp";
 
 export interface ISecurityInfo extends IDateStamp {
