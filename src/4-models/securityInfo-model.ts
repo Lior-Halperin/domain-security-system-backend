@@ -1,48 +1,48 @@
 import { IApiRawData } from "./apiRawData";
 import { IDateStamp } from "./dateStamp";
 
-export interface ISecurityInfo extends IDateStamp, IApiRawData {
+export interface ISecurityInfo extends IDateStamp {
   domainId: string;
   categories: object;
-  lastAnalysis_results: object;
+  lastAnalysisResults: object;
   lastHttpsCertificate: object;
   whois: string;
   reputation: number;
   totalVotes: object;
   createdDate: number;
   updatedDate: number;
+  status: 'pending' | 'completed'; // Todo: change to enum
+  scanDate: string;
 }
 
 export class SecurityInfoModel {
-  public readonly _id: string;
-  public readonly domainId: string;
-  public readonly categories: string;
-  public readonly lastAnalysis_results: string;
-  public readonly lastHttpsCertificate: string;
-  public readonly whois: string;
-  public readonly reputation: number;
-  public readonly totalVotes: string;
-  public readonly createdDate: number;
-  public readonly updatedDate: number;
-  public readonly rawData: string;
-  public readonly apiType: string;
-  public readonly hashSelectedData: string;
+  public domainId : string;
+  public categories : string;
+  public lastAnalysisResults : string;
+  public lastHttpsCertificate : string;
+  public whois : string;
+  public reputation : number;
+  public totalVotes : string;
+  public createdDate : number;
+  public updatedDate : number;
+  public status : 'pending' | 'completed';
+  public scanDate: string;
+
+
 
   public constructor(data: ISecurityInfo) {
-    this._id = data.domainId;
     this.domainId = data.domainId;
     this.categories = JSON.stringify(data.categories);
-    this.lastAnalysis_results = JSON.stringify(data.lastAnalysis_results);
+    this.lastAnalysisResults = JSON.stringify(data.lastAnalysisResults);
     this.lastHttpsCertificate = JSON.stringify(data.lastHttpsCertificate);
     this.whois = data.whois;
     this.reputation = data.reputation;
     this.totalVotes = JSON.stringify(data.totalVotes);
     this.createdDate = data.createdDate;
     this.updatedDate = data.updatedDate;
-    this.rawData = JSON.stringify(data.rawData);
-    this.apiType = data.apiType;
-    this.hashSelectedData = data.hashSelectedData;
-  }
+    this.status = data.status;
+    this.scanDate = data.scanDate
+}
 
   // Todo - add validation
 }

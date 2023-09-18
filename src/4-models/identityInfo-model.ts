@@ -7,21 +7,21 @@ export interface IIdentityInfo {
   administrativeContact: IIdentityOrganization;
   technicalContact: IIdentityOrganization;
   hostNames: [];
-  status: string;
+  status: 'pending' | 'completed';
+  scanDate: string;
 }
 
 export class IdentityInfoModel {
-  public readonly _id: string;
-  public readonly domainName: string;
-  public readonly expiresDate: string;
-  public readonly registrant: string;
-  public readonly administrativeContact: string;
-  public readonly technicalContact: string;
-  public readonly hostNames: string;
-  public readonly status: string;
+  public domainName: string;
+  public expiresDate: string;
+  public registrant: string;
+  public administrativeContact: string;
+  public technicalContact: string;
+  public hostNames: string;
+  public  status: 'pending' | 'completed';
+  public scanDate: string;
 
   constructor(data: IIdentityInfo) {
-    this._id = data.domainName;
     this.domainName = data.domainName;
     this.expiresDate = data.expiresDate;
     this.registrant = JSON.stringify(data.registrant);
@@ -29,6 +29,7 @@ export class IdentityInfoModel {
     this.technicalContact = JSON.stringify(data.technicalContact);
     this.hostNames = JSON.stringify(data.hostNames);
     this.status = data.status;
+    this.scanDate = data.scanDate
   }
 
   // Todo - add validation
