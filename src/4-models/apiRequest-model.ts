@@ -7,16 +7,16 @@ import { SecurityInfoModel } from "./securityInfo-model";
 
 class ApiRequestModel {
   private endpoint: string;
-  private limitRequest: string;
-  private duration: string;
+  public readonly limitRequest: number;
+  public readonly duration: number;
   private paramsApi: object;
   private headersApi: object;
   public apiType: ApisList;
 
   public constructor(apiName: ApisList) {
     this.endpoint = process.env[`API_URL_${apiName}`];
-    this.limitRequest = process.env[`API_LIMITED_DURATION_${apiName}`]; // 1000
-    this.duration = process.env[`API_LIMITED_REQUEST_DURATION_${apiName}`]; // 50
+    this.duration = Number(process.env[`API_LIMITED_DURATION_${apiName}`]); // 1000
+    this.limitRequest = Number(process.env[`API_LIMITED_REQUEST_DURATION_${apiName}`]); // 50
     this.apiType = apiName;
 
     switch (apiName) {
@@ -60,7 +60,7 @@ class ApiRequestModel {
     try {
       const scanDate = tools.creatorDateNew();
       let dateApi = apiResponse.data;
-      console.log(dateApi)
+      console.log(dateApi);
       // Put the data into the database
       let sql: string = "";
       let values = [];
@@ -104,7 +104,7 @@ class ApiRequestModel {
             createdDate: dateApi.creation_date,
             updatedDate: dateApi.last_update_date,
             status: "completed",
-            scanDate: scanDate
+            scanDate: scanDate,
           });
           sql =
             "UPDATE security_info SET domainId = ? , whois = ? , lastHttpsCertificate = ? , reputation = ? , lastAnalysisResults = ? , categories = ? , totalVotes = ? , createdDate = ? , updatedDate = ? , status = ? , scanDate = ?   WHERE domainId  = ?";
