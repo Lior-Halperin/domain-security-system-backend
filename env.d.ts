@@ -21,7 +21,6 @@ declare global {
       DB_PASSWORD_PROD: string;
       SERVER_PORT_PROD: number;
 
-
       // Testing environment variables
       DB_TYPE_TEST: string;
       DB_HOST_TEST: string;
@@ -32,10 +31,23 @@ declare global {
       SERVER_PORT_TEST: number;
 
       // Cyber
-      HASH_SALT: string
-      HASH_ALGORITHM:string
-      JWT_SECRET_KEY: string
-      
+      HASH_SALT: string;
+      HASH_ALGORITHM: string;
+      JWT_SECRET_KEY: string;
+
+      // Api - Whois
+      API_URL_WHOIS: string;
+      API_KEY_WHOIS: string;
+      API_LIMITED_DAY_WHOIS: string;
+      API_LIMITED_REQUEST_DURATION_WHOIS: number;
+      API_LIMITED_DURATION_WHOIS: number;
+
+      // Api - Virus Total
+      API_URL_VIRUS: string;
+      API_KEY_VIRUS: string;
+      API_LIMITED_DAY_VIRUS: number;
+      API_LIMITED_DURATION_VIRUS: number;
+      API_LIMITED_REQUEST_DURATION_VIRUS: number;
     }
   }
 }

@@ -5,9 +5,9 @@ import { RouteNotFoundError } from "./4-models/errors-model";
 import catchAll from "./3-middlewares/catch-all";
 import config from "./2-utils/config";
 import domainController from "./6-controllers/domain-controller";
-import scanDomainsLogic from "./5-logic/scanDomains-logic";
 import ApiRequestModel from "./4-models/apiRequest-model";
 import { ApisList } from "./4-models/apis-list";
+import scanDomainsLogic from "./5-logic/scanDomains-logic";
 
 const server = express();
 
@@ -17,6 +17,7 @@ async function scanDomains() {
       const apiRequestModel: ApiRequestModel = new ApiRequestModel(
         ApisList[`${apisItem}`]
       );
+      
       // Get the domains required for scanning by date from the DB
       const domainsToScan = await scanDomainsLogic.getDomainsByLastUpdateDate(
         apiRequestModel.apiType
