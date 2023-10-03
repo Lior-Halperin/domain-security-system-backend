@@ -23,6 +23,7 @@ const EnvOperator = ():envOperatorType => {
 const DbConfig = (operator: envOperatorType) => {
   return {
     host: process.env[`DB_HOST${operator}`],
+    port:process.env[`DB_PORT${operator}`],
     user: process.env[`DB_USER${operator}`],
     database: process.env[`DB_NAME${operator}`],
     password: process.env[`DB_PASSWORD${operator}`],
