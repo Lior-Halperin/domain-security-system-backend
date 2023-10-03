@@ -1,0 +1,47 @@
+
+# All services defined:
+services:
+
+  # Todo - add services to DB:
+  database:
+  
+    image: tomsik68/xampp
+    ports:
+      - "80:80"      # Apache
+      - "3306:3306"  # MySQL
+    volumes:
+      - ./domain-security:/opt/lampp/htdocs
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # Mount the initialization script
+
+    # Environment veriables:
+    env_file:
+      - .env
+
+  # Service name:
+  backend-service:
+
+    # Container name:
+    container_name: backend-container
+
+    # Restart policy (when to restart if crashed/stoped):
+    restart: unless-stopped
+
+    # Image name to build:
+    image: liorhalperin/domain-security-backend:1.0
+
+    # Image location:
+    build: .
+
+    # Port binding (host-port: container-port):
+    ports:
+      - 3002:3002
+
+    depends_on:
+      - database
+
+    # Environment veriables:
+    env_file:
+      - .env
+
+    # Start our backend when container started:
+    command: npm start  
