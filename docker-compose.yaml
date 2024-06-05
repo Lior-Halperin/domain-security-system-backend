@@ -1,3 +1,4 @@
+version: '3'
 
 # All services defined:
 services:
@@ -5,13 +6,23 @@ services:
   # Todo - add services to DB:
   database:
   
-    image: tomsik68/xampp
+    image: mysql:8.0
+    container_name: mysqlcontainer
+    command: --default-authentication-plugin=mysql_native_password
+    
+    # profiles:
+    #   - database_services 
+
+    volumes: # source:destination:access mode 
+      # - ./domain-security:/opt/lampp/htdocs:rw
+      - ./init.sql:/docker-entrypoint-initdb.d/0_init.sql:rw  # Mount the initialization script
+      # - sqlCommends:/docker-entrypoint-initdb.d/0_init.sql:rw  # Mount the initialization script
+
+  # volumes: # Use a named volume prevents Docker from creating a new volume for each run, which will take up extra memory on the host machine
+  #   sqlCommends: ./init.sql
+
     ports:
-      - "80:80"      # Apache
-      - "3306:3306"  # MySQL
-    volumes:
-      - ./domain-security:/opt/lampp/htdocs
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql  # Mount the initialization script
+      - 3306:3306
 
     # Environment veriables:
     env_file:
@@ -19,6 +30,10 @@ services:
 
   # Service name:
   backend-service:
+
+  # Service profiles allow you to specify which groups of containers to start and stop or establish a default group
+    # profiles: 
+    #   - backend_services
 
     # Container name:
     container_name: backend-container
@@ -35,7 +50,6 @@ services:
     # Port binding (host-port: container-port):
     ports:
       - 3002:3002
-
     depends_on:
       - database
 

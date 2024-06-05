@@ -1,9 +1,20 @@
 -- permission to connect from any host (%)
-GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '' WITH GRANT OPTION;
-FLUSH PRIVILEGES;
-EXIT;
+-- GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY `1234` WITH GRANT OPTION;
+-- FLUSH PRIVILEGES;
+-- EXIT;
 
-CREATE DATABASE IF NOT EXISTS 'domian-security';
+-- Create the user first
+-- CREATE USER 'root'@'%' IDENTIFIED BY '1234';
+
+CREATE DATABASE IF NOT EXISTS `domian_security`;
+USE `domian_security`;
+
+-- Then grant privileges
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
+
+FLUSH PRIVILEGES;
+
+
 
 -- DROP TABLE IF EXISTS domain;
 
@@ -12,7 +23,7 @@ CREATE TABLE IF NOT EXISTS domains (
     domainName VARCHAR(20) NOT NULL UNIQUE,
     securityInfo VARCHAR(255),
     identityInfo VARCHAR(255),
-    scanDate DATE NOT NULL,
+    -- scanDate DATE NOT NULL,
     activityStatus ENUM('new','active', 'inactive') DEFAULT ('new')
 );
 
@@ -44,3 +55,7 @@ CREATE TABLE IF NOT EXISTS identity_info (
     status ENUM('pending','completed') DEFAULT ('pending')
 );
 
+INSERT INTO domains(domainName,
+    securityInfo,
+    identityInfo
+) VALUES('google.com','2','3');

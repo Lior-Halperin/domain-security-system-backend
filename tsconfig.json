@@ -6,7 +6,7 @@
       "module": "commonjs", // specifies the module system that TypeScript should use. Node.js uses CommonJS modules.
       "lib": ["ES6"], // specifies the built-in TypeScript libraries that should be available in our project.
       "emitDecoratorMetadata":true,
-      "esModuleInterop": true, // enables interoperability between CommonJS and ES modules.
+      "esModuleInterop": true, // enables interoperability between CommonJS and ES modules. (Allows to use import)
       "skipDefaultLibCheck": true,
       "skipLibCheck": true, // skips type checking of declarations files.
       "moduleResolution": "node", // tells TypeScript to use Node.js's module resolution algorithm. This is necessary for resolving imports in Node.js projects.
