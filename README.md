@@ -139,3 +139,10 @@ Scheduled tasks are handled using `node-cron`. The following task is scheduled t
 
 ```js
 cron.schedule("0 9,23 * * *", scanDomains);
+```
+
+## Authors
+
+- [@Lior-Halperin](https://www.github.com/Lior-Halperin)
+
+[![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/lior-halperin-25a90b219/)
