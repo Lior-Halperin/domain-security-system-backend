@@ -26,7 +26,7 @@ The Domain Security system provides security and identity information about doma
 - axios
 
 **N-Tiers Architecture** 
-![N-Tiers-Architecture](/1-assets/n-triers-architecture.png)
+![N-Tiers-Architecture](/src/1-assets/n-triers-architecture.png)
 
 ## Installation
 
