@@ -119,7 +119,7 @@ The Domain Security system provides security and identity information about doma
     - `totalVotes` VARCHAR(255)
     - `createdDate` INT
     - `updatedDate` INT
-    - `scanDate` DATE NOT NULL
+    - `scanDate` DATE DEFAULT '1970-01-01'
     - `status` ENUM('pending', 'completed') DEFAULT 'pending'
 
 3. `identity_info`
@@ -130,7 +130,7 @@ The Domain Security system provides security and identity information about doma
     - `administrativeContact` VARCHAR(255)
     - `technicalContact` VARCHAR(255)
     - `hostNames` VARCHAR(255)
-    - `scanDate` DATE NOT NULL
+    - `scanDate` DATE DEFAULT '1970-01-01'
     - `status` ENUM('pending', 'completed') DEFAULT 'pending'
 
 ## Scheduled Tasks

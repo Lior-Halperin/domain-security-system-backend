@@ -1,11 +1,3 @@
--- permission to connect from any host (%)
--- GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY `1234` WITH GRANT OPTION;
--- FLUSH PRIVILEGES;
--- EXIT;
-
--- Create the user first
--- CREATE USER 'root'@'%' IDENTIFIED BY '1234';
-
 CREATE DATABASE IF NOT EXISTS `domian_security`;
 USE `domian_security`;
 
@@ -14,8 +6,6 @@ GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
 
 FLUSH PRIVILEGES;
 
-
-
 -- DROP TABLE IF EXISTS domain;
 
 CREATE TABLE IF NOT EXISTS domains (
@@ -23,7 +13,7 @@ CREATE TABLE IF NOT EXISTS domains (
     domainName VARCHAR(20) NOT NULL UNIQUE,
     securityInfo VARCHAR(255),
     identityInfo VARCHAR(255),
-    -- scanDate DATE NOT NULL,
+    scanDate DATE DEFAULT '1970-01-01',
     activityStatus ENUM('new','active', 'inactive') DEFAULT ('new')
 );
 
@@ -39,7 +29,7 @@ CREATE TABLE IF NOT EXISTS security_info (
      totalVotes VARCHAR(255),
      createdDate int,
      updatedDate int,
-     scanDate DATE NOT NULL,
+     scanDate DATE DEFAULT '1970-01-01',
      status ENUM('pending','completed') DEFAULT ('pending')
 );
 
@@ -51,11 +41,6 @@ CREATE TABLE IF NOT EXISTS identity_info (
     administrativeContact VARCHAR(255),
     technicalContact VARCHAR(255),
     hostNames VARCHAR(255),
-    scanDate DATE NOT NULL,
+    scanDate DATE DEFAULT '1970-01-01',
     status ENUM('pending','completed') DEFAULT ('pending')
 );
-
-INSERT INTO domains(domainName,
-    securityInfo,
-    identityInfo
-) VALUES('google.com','2','3');

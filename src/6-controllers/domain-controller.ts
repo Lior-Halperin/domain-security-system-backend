@@ -17,7 +17,7 @@ router.get("/domain/:domainName", async (request: Request, response: Response, n
     }
 });
 
-// GET http://localhost:3002/api/add-domain
+// POST http://localhost:3002/api/add-domain
 router.post("/add-domain", async (request: Request, response: Response, next: NextFunction)=>{
     try{
         const domainName:string = request.body.domain
