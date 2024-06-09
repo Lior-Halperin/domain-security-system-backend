@@ -47,3 +47,12 @@ CREATE TABLE IF NOT EXISTS identity_info (
     scanDate DATE DEFAULT '1900-01-01',
     status ENUM('pending','completed') DEFAULT ('pending')
 );
+
+CREATE TABLE IF NOT EXISTS request_logs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    method VARCHAR(10),
+    url VARCHAR(50),
+    headers TEXT, --  TEXT allows for more flexibility as it can accommodate variable lengths without requiring you to define a maximum length.
+    body TEXT,
+    timestamp DATE DEFAULT '1900-01-01'
+);
