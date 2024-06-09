@@ -8,7 +8,7 @@ services:
   
     image: mysql:8.0
     container_name: mysqlcontainer
-    command: --default-authentication-plugin=mysql_native_password
+    command: --default-authentication-plugin=caching_sha2_password
     
     # profiles:
     #   - database_services 
@@ -16,6 +16,7 @@ services:
     volumes: # source:destination:access mode 
       # - ./domain-security:/opt/lampp/htdocs:rw
       - ./init.sql:/docker-entrypoint-initdb.d/0_init.sql:rw  # Mount the initialization script
+      - ./my.cnf:/etc/mysql/my.cnf:ro
       # - sqlCommends:/docker-entrypoint-initdb.d/0_init.sql:rw  # Mount the initialization script
 
   # volumes: # Use a named volume prevents Docker from creating a new volume for each run, which will take up extra memory on the host machine
