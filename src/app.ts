@@ -39,8 +39,8 @@ async function scanDomains() {
   }
 }
 
-// This will schedule the function to run at 9 in the morning and 11 at night.
-cron.schedule("0 9,23 * * *", scanDomains);
+// This will schedule the function to run once a month at 9 in the morning and 11 at night.
+cron.schedule("0 9,23 1 * *", scanDomains);
 
 //  Backend approval to browse AJAX to backend API
 if (process.env.NODE_ENV === "development") server.use(cors());

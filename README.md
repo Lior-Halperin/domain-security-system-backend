@@ -135,10 +135,10 @@ The Domain Security system provides security and identity information about doma
 
 ## Scheduled Tasks
 
-Scheduled tasks are handled using `node-cron`. The following task is scheduled to run at 9 AM and 11 PM every day:
+Scheduled tasks are handled using `node-cron`. The following task is scheduled to run once a month at 9 AM and 11 PM every day:
 
 ```js
-cron.schedule("0 9,23 * * *", scanDomains);
+cron.schedule("0 9,23 1 * *", scanDomains);
 ```
 
 ## Authors
