@@ -1,13 +1,14 @@
 import dal from "../2-utils/db-dal";
+import { DomainModel } from "../4-models/domain-model";
 import {
   AddingExistingParameterError,
   ResourceNotFoundError,
   ValidationError,
 } from "../4-models/errors-model";
 
-async function getDomainInfoByName(domainName: string): Promise<any> { // Todo: promise type
-  // Todo: Promise<domainInfoResponse>
 
+async function getDomainByName(domainName: string): Promise<DomainModel> { // Todo: promise type
+  
   // Todo: Validate domain name using ragex:
   const regex = /^.{2,20}$/; // least two characters and up to 20 characters
   const errors = regex.test(domainName);
@@ -21,8 +22,8 @@ async function getDomainInfoByName(domainName: string): Promise<any> { // Todo: 
 
   // Send query do DB
   const domain = await dal.execute(sql, [domainName]);
-
-  if (!domain) {
+  
+  if (domain.length === 0) {
     // sql query:
     const sql = `INSERT INTO domains(domainName) VALUES(?)`;
 
@@ -72,6 +73,6 @@ async function addNewDomain(domainName: string): Promise<any>{ // Todo: promise 
 }
 
 export default {
-  getDomainInfoByName,
+  getDomainByName,
   addNewDomain,
 };

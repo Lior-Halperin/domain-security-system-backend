@@ -8,7 +8,7 @@ const router = express.Router();
 router.get("/domain/:domainName", requestLogs, async (request: Request, response: Response, next: NextFunction)=> {
     try{
         const domainName = request.params.domainName
-        const domainInfoResponse = await logic.getDomainInfoByName(domainName)
+        const domainInfoResponse = await logic.getDomainByName(domainName)
 
         response.json(domainInfoResponse)
 
