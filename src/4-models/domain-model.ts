@@ -1,26 +1,26 @@
-import { IIdentityInfo } from "./identityInfo-model";
-import { ISecurityInfo } from "./securityInfo-model";
+import { IdentityInfoModel } from "./identityInfo-model";
+import { SecurityInfoModel } from "./securityInfo-model";
 
-export interface IDomainModel {
+export interface IDomainModelFullDetail {
   domainName: string;
-  securityInfo: ISecurityInfo;
-  identityInfo: IIdentityInfo;
+  securityInfoId: SecurityInfoModel;
+  identityInfoId: IdentityInfoModel;
   scanDate: string;
   activityStatus: "new" | "active" | "inactive";
 }
 
-export class DomainModel {
+export class DomainModelFullDetail implements IDomainModelFullDetail{
   public id: number;
   public domainName: string;
-  public securityInfo: string;
-  public identityInfo: string;
+  public securityInfoId: SecurityInfoModel;
+  public identityInfoId: IdentityInfoModel;
   public activityStatus: "new" | "active" | "inactive";
   public scanDate: string;
 
-  public constructor(domain: DomainModel) {
+  public constructor(domain: IDomainModelFullDetail) {
     this.domainName = domain.domainName;
-    this.securityInfo = JSON.stringify(domain.securityInfo);
-    this.identityInfo = JSON.stringify(domain.identityInfo);
+    this.securityInfoId = domain.securityInfoId;
+    this.identityInfoId = domain.identityInfoId;
     this.scanDate = domain.scanDate;
     this.activityStatus = domain.activityStatus;
   }

@@ -1,31 +1,35 @@
+import { OkPacket } from "mysql";
 import dal from "../2-utils/db-dal";
-import { DomainModel } from "../4-models/domain-model";
+import { DomainModelFullDetail } from "../4-models/domain-model";
 import {
   AddingExistingParameterError,
   ResourceNotFoundError,
   ValidationError,
 } from "../4-models/errors-model";
 
-async function getDomainByName(domainName: string): Promise<DomainModel> {
+
+async function getDomainFullDetailsByName(domainName: string): Promise<DomainModelFullDetail> {
   // Todo: Validate domain name using ragex:
   const regex = /^.{2,20}$/; // least two characters and up to 20 characters
   const errors = regex.test(domainName);
-
   if (!errors) {
     throw new ValidationError("The domain is not invalid");
   }
 
-  // Send query do DB
-  const domain = await getDomainByNameHelpFunction(domainName)
+    // sql query:
+    const sql = `SELECT * FROM domains AS do JOIN identity_info AS ide ON do.identityInfoId = ide.id JOIN security_info AS se ON do.securityInfoId = se.id WHERE do.domainName ="${domainName}"`;
 
-  if (!!domain[0]) {
+    // Send query do DB
+    const result = await dal.execute(sql, [domainName]);
+
+  if (!result[0]) {
     // Add domain
    await addDomainHelpFunction(domainName);
     throw new ResourceNotFoundError(domainName);
   }
 
   // return domainInfoResponse
-  return domain[0];
+  return result[0];
 }
 
 async function addNewDomain(domainName: string): Promise<string> {
@@ -39,8 +43,12 @@ async function addNewDomain(domainName: string): Promise<string> {
   }
 
   // Checking if the domain exists in a database:
-  const result = await getDomainByNameHelpFunction(domainName)
+    // sql query:
+    const sqlDomainChecking = `SELECT * FROM domains WHERE domainName = ?`;
 
+    // Send query do DB
+    const result = await dal.execute(sqlDomainChecking, [domainName]);
+    
   // if the domain exists in the DB:
   if (result[0]) {
     throw new AddingExistingParameterError(domainName);
@@ -51,39 +59,26 @@ async function addNewDomain(domainName: string): Promise<string> {
   return "The domain has been accepted and is waiting to be scanned.";
 }
 
-// Helper function for get domain by name - prevents duplication in the code.
-async function getDomainByNameHelpFunction(domainName: string): Promise<DomainModel[]> {
-  try {
-    // sql query:
-    const sqlDomainChecking = `SELECT * FROM domains WHERE domainName = ?`;
-
-    // Send query do DB
-    const result = await dal.execute(sqlDomainChecking, [domainName]);
-
-    return result;
-  } catch (err: any) {
-    throw err
-  }
-}
-
 // Helper function for adding a new domain - prevents duplication in the code.
 async function addDomainHelpFunction(domainName: string): Promise<void> {
   try {
     // sql query:
-    const sql = `INSERT INTO domains(domainName,activityStatus) VALUES(?,?)`;
+    const sql = `INSERT INTO domains(domainName, securityInfoId, identityInfoId, activityStatus) VALUES(?,?,?,?)`;
     const sql2 = `INSERT INTO identity_info(domainName, status) VALUES(?,?)`;
     const sql3 = `INSERT INTO security_info(domainId , status) VALUES(?,?)`;
 
     // Send query do DB - add domain
-    await dal.execute(sql, [domainName, "active"]);
-    await dal.execute(sql2, [domainName, "pending"]);
-    await dal.execute(sql3, [domainName, "pending"]);
+    const identityInfo: OkPacket = await dal.execute(sql2, [domainName, "pending"]);
+    const securityInfo: OkPacket = await dal.execute(sql3, [domainName, "pending"]);
+    if(identityInfo.insertId > 0 && securityInfo.insertId > 0){
+        await dal.execute(sql, [domainName, securityInfo.insertId, identityInfo.insertId, "active"]);
+    }
   } catch (err: any) {
     throw err;
   }
 }
 
 export default {
-  getDomainByName,
+  getDomainFullDetailsByName,
   addNewDomain,
 };
