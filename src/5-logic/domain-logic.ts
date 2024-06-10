@@ -7,8 +7,6 @@ import {
 } from "../4-models/errors-model";
 
 async function getDomainByName(domainName: string): Promise<DomainModel> {
-  // Todo: promise type
-
   // Todo: Validate domain name using ragex:
   const regex = /^.{2,20}$/; // least two characters and up to 20 characters
   const errors = regex.test(domainName);
@@ -17,25 +15,20 @@ async function getDomainByName(domainName: string): Promise<DomainModel> {
     throw new ValidationError("The domain is not invalid");
   }
 
-  // sql query:
-  const sql = `SELECT * FROM domains WHERE domainName = ?`;
-
   // Send query do DB
-  const domain = await dal.execute(sql, [domainName]);
+  const domain = await getDomainByNameHelpFunction(domainName)
 
-  if (domain.length === 0) {
-
+  if (!!domain[0]) {
     // Add domain
-    addDomainHelpFunction(domainName)
+   await addDomainHelpFunction(domainName);
     throw new ResourceNotFoundError(domainName);
   }
 
   // return domainInfoResponse
-  return domain;
+  return domain[0];
 }
 
-async function addNewDomain(domainName: string): Promise<any> {
-  // Todo: promise type
+async function addNewDomain(domainName: string): Promise<string> {
 
   // Todo: Validate domain name using ragex:
   const regex = /^.{2,20}$/; // least two characters and up to 20 characters
@@ -46,22 +39,34 @@ async function addNewDomain(domainName: string): Promise<any> {
   }
 
   // Checking if the domain exists in a database:
-  // sql query:
-  const sqlDomainChecking = `SELECT * FROM domains WHERE domainName = ?`;
-
-  // Send query do DB
-  const result = await dal.execute(sqlDomainChecking, [domainName]);
+  const result = await getDomainByNameHelpFunction(domainName)
 
   // if the domain exists in the DB:
   if (result[0]) {
     throw new AddingExistingParameterError(domainName);
   }
 
-    addDomainHelpFunction(domainName)
+  await addDomainHelpFunction(domainName);
 
   return "The domain has been accepted and is waiting to be scanned.";
 }
 
+// Helper function for get domain by name - prevents duplication in the code.
+async function getDomainByNameHelpFunction(domainName: string): Promise<DomainModel[]> {
+  try {
+    // sql query:
+    const sqlDomainChecking = `SELECT * FROM domains WHERE domainName = ?`;
+
+    // Send query do DB
+    const result = await dal.execute(sqlDomainChecking, [domainName]);
+
+    return result;
+  } catch (err: any) {
+    throw err
+  }
+}
+
+// Helper function for adding a new domain - prevents duplication in the code.
 async function addDomainHelpFunction(domainName: string): Promise<void> {
   try {
     // sql query:
@@ -73,7 +78,6 @@ async function addDomainHelpFunction(domainName: string): Promise<void> {
     await dal.execute(sql, [domainName, "active"]);
     await dal.execute(sql2, [domainName, "pending"]);
     await dal.execute(sql3, [domainName, "pending"]);
-
   } catch (err: any) {
     throw err;
   }
