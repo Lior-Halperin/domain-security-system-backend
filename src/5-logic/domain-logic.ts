@@ -6,9 +6,9 @@ import {
   ValidationError,
 } from "../4-models/errors-model";
 
+async function getDomainByName(domainName: string): Promise<DomainModel> {
+  // Todo: promise type
 
-async function getDomainByName(domainName: string): Promise<DomainModel> { // Todo: promise type
-  
   // Todo: Validate domain name using ragex:
   const regex = /^.{2,20}$/; // least two characters and up to 20 characters
   const errors = regex.test(domainName);
@@ -22,13 +22,11 @@ async function getDomainByName(domainName: string): Promise<DomainModel> { // To
 
   // Send query do DB
   const domain = await dal.execute(sql, [domainName]);
-  
-  if (domain.length === 0) {
-    // sql query:
-    const sql = `INSERT INTO domains(domainName) VALUES(?)`;
 
-    // Send query do DB - add domain
-    await dal.execute(sql, [domainName]);
+  if (domain.length === 0) {
+
+    // Add domain
+    addDomainHelpFunction(domainName)
     throw new ResourceNotFoundError(domainName);
   }
 
@@ -36,10 +34,10 @@ async function getDomainByName(domainName: string): Promise<DomainModel> { // To
   return domain;
 }
 
-async function addNewDomain(domainName: string): Promise<any>{ // Todo: promise type
- 
-    
-    // Todo: Validate domain name using ragex:
+async function addNewDomain(domainName: string): Promise<any> {
+  // Todo: promise type
+
+  // Todo: Validate domain name using ragex:
   const regex = /^.{2,20}$/; // least two characters and up to 20 characters
   const errors = regex.test(domainName);
 
@@ -59,17 +57,26 @@ async function addNewDomain(domainName: string): Promise<any>{ // Todo: promise 
     throw new AddingExistingParameterError(domainName);
   }
 
-  // sql query:
-  const sql = `INSERT INTO domains(domainName,activityStatus) VALUES(?,?)`;
-  const sql2 = `INSERT INTO identity_info(domainName, status) VALUES(?,?)`;
-  const sql3 = `INSERT INTO security_info(domainId , status) VALUES(?,?)`;
-
-  // Send query do DB - add domain
-  await dal.execute(sql, [domainName,'active']);
-  await dal.execute(sql2, [domainName,'pending']);
-  await dal.execute(sql3, [domainName,'pending']);
+    addDomainHelpFunction(domainName)
 
   return "The domain has been accepted and is waiting to be scanned.";
+}
+
+async function addDomainHelpFunction(domainName: string): Promise<void> {
+  try {
+    // sql query:
+    const sql = `INSERT INTO domains(domainName,activityStatus) VALUES(?,?)`;
+    const sql2 = `INSERT INTO identity_info(domainName, status) VALUES(?,?)`;
+    const sql3 = `INSERT INTO security_info(domainId , status) VALUES(?,?)`;
+
+    // Send query do DB - add domain
+    await dal.execute(sql, [domainName, "active"]);
+    await dal.execute(sql2, [domainName, "pending"]);
+    await dal.execute(sql3, [domainName, "pending"]);
+
+  } catch (err: any) {
+    throw err;
+  }
 }
 
 export default {
