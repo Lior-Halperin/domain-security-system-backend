@@ -9,22 +9,6 @@ SET GLOBAL host_cache_size=0; -- Ensure init.sql file does not use deprecated se
 
 FLUSH PRIVILEGES;
 
--- DROP TABLE IF EXISTS domain;
-
-CREATE TABLE IF NOT EXISTS domains (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    domainName VARCHAR(20) NOT NULL UNIQUE,
-    securityInfoId INT NOT NULL,
-    identityInfoId INT NOT NULL,
-    scanDate DATE DEFAULT '1900-01-01', 
-    activityStatus ENUM('new','active', 'inactive') DEFAULT ('new'),
-    FOREIGN KEY (securityInfoId) REFERENCES security_info(id) ON DELETE CASCADE,
-    FOREIGN KEY (identityInfoId) REFERENCES identity_info(id) ON DELETE CASCADE
-    INDEX (securityInfoId),
-    INDEX (identityInfoId)
-);
-
-
 CREATE TABLE IF NOT EXISTS security_info (
     id INT AUTO_INCREMENT PRIMARY KEY,
      domainId VARCHAR(20) NOT NULL UNIQUE,
@@ -50,6 +34,19 @@ CREATE TABLE IF NOT EXISTS identity_info (
     hostNames VARCHAR(255),
     scanDate DATE DEFAULT '1900-01-01',
     status ENUM('pending','completed') DEFAULT ('pending')
+);
+
+CREATE TABLE IF NOT EXISTS domains (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    domainName VARCHAR(20) NOT NULL UNIQUE,
+    securityInfoId INT NOT NULL,
+    identityInfoId INT NOT NULL,
+    scanDate DATE DEFAULT '1900-01-01', 
+    activityStatus ENUM('new','active', 'inactive') DEFAULT ('new'),
+    FOREIGN KEY (securityInfoId) REFERENCES security_info(id) ON DELETE CASCADE,
+    FOREIGN KEY (identityInfoId) REFERENCES identity_info(id) ON DELETE CASCADE,
+    INDEX (securityInfoId),
+    INDEX (identityInfoId)
 );
 
 CREATE TABLE IF NOT EXISTS request_logs (
