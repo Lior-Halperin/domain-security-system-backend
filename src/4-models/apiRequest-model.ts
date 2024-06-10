@@ -125,9 +125,7 @@ class ApiRequestModel {
           break;
       }
       await dbDal.execute(sql, values);
-      //   console.log(`Inserted data for ${domain}`);
     } catch (err: any) {
-      //   console.error(`Failed to fetch data for ${domain}`);
       throw err;
     }
   }
