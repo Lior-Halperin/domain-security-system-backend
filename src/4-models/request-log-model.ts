@@ -1,5 +1,6 @@
 import { IncomingHttpHeaders } from "http";
 
+// This data model describes the requests that are sent to the server.
 interface IRequestLogsModel {
     method: string
     url: string
