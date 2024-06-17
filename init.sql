@@ -9,9 +9,15 @@ SET GLOBAL host_cache_size=0; -- Ensure init.sql file does not use deprecated se
 
 FLUSH PRIVILEGES;
 
+CREATE TABLE IF NOT EXISTS domains (
+    domainId VARCHAR(20) PRIMARY KEY,
+    scanDate DATE DEFAULT '1900-01-01', 
+    activityStatus ENUM('new','active', 'inactive') DEFAULT ('new'),
+    INDEX (scanDate)
+);
+
 CREATE TABLE IF NOT EXISTS security_info (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-     domainId VARCHAR(20) NOT NULL UNIQUE,
+     domainId VARCHAR(20) PRIMARY KEY,
      categories VARCHAR(255),
      lastAnalysisResults VARCHAR(255),
      lastHttpsCertificate VARCHAR(255),
@@ -21,32 +27,24 @@ CREATE TABLE IF NOT EXISTS security_info (
      createdDate int,
      updatedDate int,
      scanDate DATE DEFAULT '1900-01-01', 
-     status ENUM('pending','completed') DEFAULT ('pending')
+     status ENUM('pending','completed') DEFAULT ('pending'),
+     FOREIGN KEY (domainId) REFERENCES domains(domainId) ON DELETE CASCADE, -- ON DELETE CASCADE - action ensures referential integrity by automatically deleting any dependent rows in the child tables when a row in the parent table is deleted.
+     INDEX (scanDate),
+     INDEX (status)
 );
 
 CREATE TABLE IF NOT EXISTS identity_info (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    domainName VARCHAR(20) NOT NULL UNIQUE,
+    domainId VARCHAR(20) PRIMARY KEY,
     expiresDate VARCHAR(255),
     registrant VARCHAR(255),
     administrativeContact VARCHAR(255),
     technicalContact VARCHAR(255),
     hostNames VARCHAR(255),
     scanDate DATE DEFAULT '1900-01-01',
-    status ENUM('pending','completed') DEFAULT ('pending')
-);
-
-CREATE TABLE IF NOT EXISTS domains (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    domainName VARCHAR(20) NOT NULL UNIQUE,
-    securityInfoId INT NOT NULL,
-    identityInfoId INT NOT NULL,
-    scanDate DATE DEFAULT '1900-01-01', 
-    activityStatus ENUM('new','active', 'inactive') DEFAULT ('new'),
-    FOREIGN KEY (securityInfoId) REFERENCES security_info(id) ON DELETE CASCADE,
-    FOREIGN KEY (identityInfoId) REFERENCES identity_info(id) ON DELETE CASCADE,
-    INDEX (securityInfoId),
-    INDEX (identityInfoId)
+    status ENUM('pending','completed') DEFAULT ('pending'),
+    FOREIGN KEY (domainId) REFERENCES domains(domainId) ON DELETE CASCADE,
+    INDEX (scanDate),
+    INDEX (status)
 );
 
 CREATE TABLE IF NOT EXISTS request_logs (
@@ -55,5 +53,6 @@ CREATE TABLE IF NOT EXISTS request_logs (
     url VARCHAR(50),
     headers TEXT, --  TEXT allows for more flexibility as it can accommodate variable lengths without requiring you to define a maximum length.
     body TEXT,
-    timestamp DATE DEFAULT '1900-01-01'
+    timestamp DATE DEFAULT '1900-01-01',
+    INDEX (timestamp)
 );

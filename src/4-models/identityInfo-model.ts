@@ -1,7 +1,7 @@
 import { IIdentityOrganization } from "./identityOrganization";
 
 export interface IIdentityInfo {
-  domainName: string;
+  domainId: string;
   expiresDate: string;
   registrant: IIdentityOrganization;
   administrativeContact: IIdentityOrganization;
@@ -12,7 +12,7 @@ export interface IIdentityInfo {
 }
 
 export class IdentityInfoModel {
-  public domainName: string;
+  public domainId: string;
   public expiresDate: string;
   public registrant: string;
   public administrativeContact: string;
@@ -22,7 +22,7 @@ export class IdentityInfoModel {
   public scanDate: string;
 
   constructor(data: IIdentityInfo) {
-    this.domainName = data.domainName;
+    this.domainId = data.domainId;
     this.expiresDate = data.expiresDate;
     this.registrant = JSON.stringify(data.registrant);
     this.administrativeContact = JSON.stringify(data.administrativeContact);

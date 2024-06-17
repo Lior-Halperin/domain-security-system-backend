@@ -16,7 +16,9 @@ class ApiRequestModel {
   public constructor(apiName: ApisList) {
     this.endpoint = process.env[`API_URL_${apiName}`];
     this.duration = Number(process.env[`API_LIMITED_DURATION_${apiName}`]); // 1000
-    this.limitRequest = Number(process.env[`API_LIMITED_REQUEST_DURATION_${apiName}`]); // 50
+    this.limitRequest = Number(
+      process.env[`API_LIMITED_REQUEST_DURATION_${apiName}`]
+    ); // 50
     this.apiType = apiName;
 
     switch (apiName) {
@@ -35,15 +37,15 @@ class ApiRequestModel {
     }
   }
 
-  public async axiosRequest(domainName: string) {
+  public async axiosRequest(domainId: string) {
     try {
       const endpoint =
         this.apiType === ApisList.virusTotal
-          ? this.endpoint + domainName
+          ? this.endpoint + domainId
           : this.endpoint;
 
       this.apiType === ApisList.whois &&
-        (this.paramsApi["domainName"] = domainName);
+        (this.paramsApi["domainName"] = domainId);
       const response: AxiosResponse = await axios.get(endpoint, {
         params: this.paramsApi,
         headers: this.headersApi,
@@ -51,7 +53,7 @@ class ApiRequestModel {
       //   return response.data;
       this.updateApiTableOnDB(response);
     } catch (err: any) {
-      console.error(`Error occurred for ${domainName}: ${err.message}`);
+      console.error(`Error occurred for ${domainId}: ${err.message}`);
       throw err;
     }
   }
@@ -68,7 +70,7 @@ class ApiRequestModel {
         case ApisList.whois:
           dateApi = dateApi.WhoisRecord;
           const identityInfo: IdentityInfoModel = new IdentityInfoModel({
-            domainName: dateApi.domainName,
+            domainId: dateApi.domainName,
             expiresDate: dateApi.expiresDate,
             registrant: dateApi.registrant,
             administrativeContact: dateApi.administrativeContact,
@@ -78,9 +80,9 @@ class ApiRequestModel {
             scanDate: scanDate,
           });
           sql =
-            "UPDATE identity_info SET domainName = ?, expiresDate = ?, registrant = ?, administrativeContact = ?, technicalContact = ?, hostNames = ?, scanDate = ?, status = ? WHERE domainName  = ?";
+            "UPDATE identity_info SET domainId = ?, expiresDate = ?, registrant = ?, administrativeContact = ?, technicalContact = ?, hostNames = ?, scanDate = ?, status = ? WHERE domainId  = ?";
           values = [
-            identityInfo.domainName,
+            identityInfo.domainId,
             identityInfo.expiresDate,
             identityInfo.registrant,
             identityInfo.administrativeContact,
@@ -88,7 +90,6 @@ class ApiRequestModel {
             identityInfo.hostNames,
             identityInfo.scanDate,
             identityInfo.status,
-            identityInfo.domainName,
           ];
           break;
         case ApisList.virusTotal:
