@@ -102,37 +102,49 @@ The Domain Security system provides security and identity information about doma
 ### Tables
 
 1. `domains`
-    - `id` INT AUTO_INCREMENT PRIMARY KEY
-    - `domainName` VARCHAR(20) NOT NULL UNIQUE
-    - `securityInfo` VARCHAR(255)
-    - `identityInfo` VARCHAR(255)
-    - `activityStatus` ENUM('new', 'active', 'inactive') DEFAULT 'new'
+   - `domainId` VARCHAR(20) PRIMARY KEY,
+   - `scanDate` DATE DEFAULT '1900-01-01', 
+   - `activityStatus` ENUM('new','active', 'inactive') DEFAULT ('new'),
+   - `INDEX` (scanDate)
 
 2. `security_info`
-    - `id` INT AUTO_INCREMENT PRIMARY KEY
-    - `domainId` VARCHAR(255)
-    - `categories` VARCHAR(255)
-    - `lastAnalysisResults` VARCHAR(255)
-    - `lastHttpsCertificate` VARCHAR(255)
-    - `whois` VARCHAR(255)
-    - `reputation` INT
-    - `totalVotes` VARCHAR(255)
-    - `createdDate` INT
-    - `updatedDate` INT
-    - `scanDate` DATE DEFAULT '1970-01-01'
-    - `status` ENUM('pending', 'completed') DEFAULT 'pending'
+    - `domainId` VARCHAR(20) PRIMARY KEY,
+    - `categories` VARCHAR(255),
+    - `lastAnalysisResults` VARCHAR(255),
+    - `lastHttpsCertificate` VARCHAR(255),
+    - `whois` VARCHAR(255),
+    - `reputation` int,
+    - `totalVotes` VARCHAR(255),
+    - `createdDate` int,
+    - `updatedDate` int,
+    - `scanDate` DATE DEFAULT '1900-01-01', 
+    - `status` ENUM('pending','completed') DEFAULT ('pending'),
+    - `FOREIGN` KEY (domainId) REFERENCES domains(domainId) ON DELETE CASCADE, 
+    - `INDEX` (scanDate),
+    - `INDEX` (status)
 
 3. `identity_info`
-    - `id` INT AUTO_INCREMENT PRIMARY KEY
-    - `domainName` VARCHAR(255)
-    - `expiresDate` VARCHAR(255)
-    - `registrant` VARCHAR(255)
-    - `administrativeContact` VARCHAR(255)
-    - `technicalContact` VARCHAR(255)
-    - `hostNames` VARCHAR(255)
-    - `scanDate` DATE DEFAULT '1970-01-01'
-    - `status` ENUM('pending', 'completed') DEFAULT 'pending'
+    - `domainId` VARCHAR(20) PRIMARY KEY,
+    - `expiresDate` VARCHAR(255),
+    - `registrant` VARCHAR(255),
+    - `administrativeContact` VARCHAR(255),
+    - `technicalContact` VARCHAR(255),
+    - `hostNames` VARCHAR(255),
+    - `scanDate` DATE DEFAULT '1900-01-01',
+    - `status` ENUM('pending','completed') DEFAULT ('pending'),
+    - `FOREIGN` KEY (domainId) REFERENCES domains(domainId) ON DELETE CASCADE,
+    - `INDEX` (scanDate),
+    - `INDEX` (status)
 
+4. `request_logs`
+    - `id` INT AUTO_INCREMENT PRIMARY KEY,
+    - `method` VARCHAR(10),
+    - `url` VARCHAR(50),
+    - `headers` TEXT, 
+    - `body` TEXT,
+    - `timestamp` DATE DEFAULT '1900-01-01',
+    - `INDEX` (timestamp)
+    
 ## Scheduled Tasks
 
 Scheduled tasks are handled using `node-cron`. The following task is scheduled to run once a month at 9 AM and 11 PM every day:
